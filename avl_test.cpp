@@ -47,7 +47,21 @@ int main() {
   // a->print();
 
   delete a;
+  
+  AVL<double>* d = new AVL<double>();
+  d->insert(1);
+  d->insert(2);
+  d->insert(4);
+  d->print();
+  d->insert(3.5);
+  d->insert(5);
+  d->print();
+  d->insert(3.25);
+  d->print();
+  
 
+
+  delete d;
 
 /*
   avl->insert(10);
