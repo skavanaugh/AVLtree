@@ -143,20 +143,38 @@ void BST<T>::insert(T v) {
     prev->setRightChild(newNode);
 
   // update balances from critNode down to where newNode was inserted
+  // store these updated balances in the vector balVec
+
   curr=critNode;
+  vector<Node<T>* > nodeVec;
+  vector<short> balVec;
+
   while (curr!=newNode) {
     if (v<curr->getValue()) {
       curr->setBalance((curr->getBalance())-1);
+      nodeVec.push_back(curr);
+      balVec.push_back(curr->getBalance());
       curr=curr->getLeftChild();
     }
     else if (v>curr->getValue()) {
       curr->setBalance((curr->getBalance())+1);
+      nodeVec.push_back(curr);
+      balVec.push_back(curr->getBalance());
       curr=curr->getRightChild();
     }
   }
 
-  // need to rebalance anything?
-  if (critNode->getBalance()==2 && critNode->getRightChild()->getBalance()!=-1) {
+  // adjust balances of nodes to their post-rotation state prior to rotating them 
+  // adjust the balances prior to rotation
+
+  if (critNode->getBalance()==2 || critNode->getBalance()==-2) {
+    updateBalances(nodeVec,balVec);
+  }
+
+
+  // need to rotate anything?  
+
+  if (critNode->getBalance()==2 && critNode->getRightChild()->getBalance()!=-1) {    
     // simple left rotation
     simpleLeftRotation(critNode,critPrev);
   }
@@ -178,7 +196,28 @@ void BST<T>::insert(T v) {
     simpleRightRotation(critNode,critPrev);
   }
   
+}
 
+template <typename T>
+void BST<T>::simpleLeftRotation(Node<T>* &cNode,Node<T>* &prevCNode) {
+  Node<T>* temp=cNode->getRightChild()->getLeftChild();
+  if (root==cNode) {
+    root=cNode->getRightChild();
+    root->setLeftChild(cNode);
+    cNode->setRightChild(temp);
+  }
+  else {
+    if (prevCNode->getRightChild()==cNode) {
+      prevCNode->setRightChild(cNode->getRightChild());
+    }
+    else {  // is this even possible ???
+      prevCNode->setLeftChild(cNode->getRightChild());  
+    }
+    cNode->getRightChild()->setLeftChild(cNode);
+    cNode->setRightChild(temp);
+  }
+
+  // update balances ???
 
 }
 

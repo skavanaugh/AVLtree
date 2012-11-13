@@ -1,5 +1,5 @@
-#ifndef __BST_H__
-#define __BST_H__
+#ifndef __AVL_H__
+#define __AVL_H__
 
 #include "Node.h"
 #include <string>
