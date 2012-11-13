@@ -1,4 +1,4 @@
-#include "BST.h"
+#include "AVL.h"
 #include <cassert>
 #include <iostream>
 #include <vector>
@@ -8,7 +8,7 @@ using std::endl;
 using std::vector;
 
 template <typename T>
-Node<T>* BST<T>::findNode(T val,Node<T>* curr,Node<T>* &parent,bool &isLC, bool &isRC) {
+Node<T>* AVL<T>::findNode(T val,Node<T>* curr,Node<T>* &parent,bool &isLC, bool &isRC) {
   if (curr==0)
     return 0;
   else if (curr->getValue()==val)
@@ -28,7 +28,7 @@ Node<T>* BST<T>::findNode(T val,Node<T>* curr,Node<T>* &parent,bool &isLC, bool 
 }
 
 template <typename T>
-Node<T>* BST<T>::findIOP(Node<T>* curr,Node<T>* &parent) {
+Node<T>* AVL<T>::findIOP(Node<T>* curr,Node<T>* &parent) {
   if (curr==0) 
     return 0;   
   else if (curr->getLeftChild()==0)
@@ -47,7 +47,7 @@ Node<T>* BST<T>::findIOP(Node<T>* curr,Node<T>* &parent) {
 }
 
 template <typename T>
-Node<T>* BST<T>::findIOS(Node<T>* curr,Node<T>* &parent) {
+Node<T>* AVL<T>::findIOS(Node<T>* curr,Node<T>* &parent) {
   if (curr==0) 
     return 0;   
   else if (curr->getRightChild()==0)
@@ -66,7 +66,7 @@ Node<T>* BST<T>::findIOS(Node<T>* curr,Node<T>* &parent) {
 }
 
 template <typename T>
-void BST<T>::removeTree(Node<T>* curr) {
+void AVL<T>::removeTree(Node<T>* curr) {
   if (curr!=0) {
     removeTree(curr->getLeftChild());
     removeTree(curr->getRightChild());
@@ -75,17 +75,17 @@ void BST<T>::removeTree(Node<T>* curr) {
 }
 
 template <typename T>
-BST<T>::BST() {
+AVL<T>::AVL() {
   root = 0;
 }
 
 template <typename T>
-BST<T>::~BST() {
+AVL<T>::~AVL() {
   removeTree(root);  
 }
 
 template <typename T>
-bool BST<T>::find(T v) {
+bool AVL<T>::find(T v) {
 
   Node<T>* fNode=0;
   Node<T>* parent=0;
@@ -101,7 +101,7 @@ bool BST<T>::find(T v) {
 }
 
 template <typename T>
-void BST<T>::insert(T v) {
+void AVL<T>::insert(T v) {
 
   Node<T>* newNode=new Node<T>(v);
   Node<T>* curr=root;
@@ -199,7 +199,7 @@ void BST<T>::insert(T v) {
 }
 
 template <typename T>
-void BST<T>::simpleLeftRotation(Node<T>* &cNode,Node<T>* &prevCNode) {
+void AVL<T>::simpleLeftRotation(Node<T>* &cNode,Node<T>* &prevCNode) {
   Node<T>* temp=cNode->getRightChild()->getLeftChild();
   if (root==cNode) {
     root=cNode->getRightChild();
@@ -222,7 +222,7 @@ void BST<T>::simpleLeftRotation(Node<T>* &cNode,Node<T>* &prevCNode) {
 }
 
 template <typename T>
-void BST<T>::remove(T v) {
+void AVL<T>::remove(T v) {
 
   bool isLC=false;  // remNode is LC of parent?
   bool isRC=false;  // remNode is RC of parent?
@@ -308,7 +308,7 @@ void BST<T>::remove(T v) {
 }
 
 template <typename T>
-void BST<T>::removeMutable(T v) {
+void AVL<T>::removeMutable(T v) {
 
   bool isLC=false;  // remNode is LC of parent?
   bool isRC=false;  // remNode is RC of parent?
@@ -379,7 +379,7 @@ void BST<T>::removeMutable(T v) {
 }
 
 template <typename T>
-void BST<T>::removeStd(T v) {
+void AVL<T>::removeStd(T v) {
 
   bool isLC=false;  // remNode is LC of parent?
   bool isRC=false;  // remNode is RC of parent?
@@ -457,12 +457,12 @@ void BST<T>::removeStd(T v) {
 }
 
 template <typename T>
-void BST<T>::print() {
+void AVL<T>::print() {
   printTree(); 
 }
 
 template <typename T>
-void BST<T>::traversalPrint(Node<T>* root) {
+void AVL<T>::traversalPrint(Node<T>* root) {
   if(root != 0) {
     traversalPrint(root->getLeftChild());
     std::cout << root->getValue() << std::endl;
@@ -471,7 +471,7 @@ void BST<T>::traversalPrint(Node<T>* root) {
 }
 
 template <typename T>
-void BST<T>::printTree() {
+void AVL<T>::printTree() {
 
   bool isEmptyLevel=false; 
   int numLevels=0;
@@ -560,12 +560,12 @@ void BST<T>::printTree() {
 }
 
 template <typename T>
-void BST<T>::printSpaces(int n) {
+void AVL<T>::printSpaces(int n) {
   for (int i=0;i<n;i++) {
     cout << " ";
   }
 }
 
-template class BST<int>;
-template class BST<double>;
-//template class BST<std::string>;
+template class AVL<int>;
+template class AVL<double>;
+//template class AVL<std::string>;

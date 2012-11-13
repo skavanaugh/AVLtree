@@ -6,7 +6,7 @@
 #include <cassert>
 
 template <typename T>
-class BST {
+class AVL {
  private:
   Node<T>* root;
   
@@ -19,8 +19,8 @@ class BST {
   void printSpaces(int n);
   
  public:
-  BST<T>();
-  ~BST<T>();
+  AVL<T>();
+  ~AVL<T>();
 
   bool find(T v);
   void remove(T v);

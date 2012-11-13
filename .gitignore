@@ -1,0 +1,4 @@
+*.o
+ntest
+ttest
+atest
