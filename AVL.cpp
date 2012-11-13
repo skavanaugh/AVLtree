@@ -164,6 +164,11 @@ void AVL<T>::insert(T v) {
     }
   }
 
+  cout << "size: " << balVec.size() << endl;
+  for (unsigned int i=0;i<balVec.size();i++) {
+    cout << nodeVec[i]->getValue() << ", " << balVec[i] << endl;
+  }
+
   // adjust balances of nodes to their post-rotation state prior to rotating them 
   // adjust the balances prior to rotation
 
@@ -173,9 +178,16 @@ void AVL<T>::insert(T v) {
   else
     return; // if critNode has balance==(-1,0,1) no need to do rotations
 
-  // if critNode has balance==+-2, we need to rotate
-  // find out what kind of rotation to do and do it 
+  cout << "size: " << balVec.size() << endl;
+  for (unsigned int i=0;i<balVec.size();i++) {
+    cout << nodeVec[i]->getValue() << ", " << nodeVec[i]->getBalance() << endl;
+  }
 
+
+  // if critNode has balance==+-2, we need to rotate
+  // below, find out what kind of rotation to do and do it 
+
+/*
   if (critNode->getBalance()==2 && critNode->getRightChild()->getBalance()!=-1) {    
     // simple left rotation
     leftRotation(critNode,critPrev);
@@ -188,16 +200,42 @@ void AVL<T>::insert(T v) {
 
   else if (critNode->getBalance()==2 && critNode->getRightChild()->getBalance()==-1) {
     // right then left rotation
-    rightRotation(critNode->getRightChild(),critNode);
+    // rightRotation(critNode->getRightChild(),critNode);
     leftRotation(critNode,critPrev);
   }
 
   else if (critNode->getBalance()==-2 && critNode->getLeftChild()->getBalance()==1) {
     // left then right rotation
-    leftRotation(critNode->getLeftChild(),critNode);
+    // leftRotation(critNode->getLeftChild(),critNode);
     rightRotation(critNode,critPrev);
   }
+*/
+  Node<T>* child=0;
   
+  if (balVec[0]==2 && balVec[1]!=-1) {    
+    // simple left rotation
+    leftRotation(critNode,critPrev);
+  }
+   
+  else if (balVec[0]==-2 && balVec[1]!=1) {
+    // simple right rotation
+    rightRotation(critNode,critPrev);
+  }
+
+  else if (balVec[0]==2 && balVec[1]==-1) {
+    // right then left rotation
+    child=critNode->getRightChild();
+    rightRotation(child,critNode);
+    leftRotation(critNode,critPrev);
+  }
+
+  else if (balVec[0]==-2 && balVec[1]==1) {
+    // left then right rotation
+    child=critNode->getLeftChild();
+    leftRotation(child,critNode);
+    rightRotation(critNode,critPrev);
+  }
+
 }
 
 template <typename T>
@@ -259,6 +297,26 @@ void AVL<T>::leftRotation(Node<T>* &cNode,Node<T>* &prevCNode) {
     }
     cNode->getRightChild()->setLeftChild(cNode);
     cNode->setRightChild(temp);
+  }
+}
+
+template <typename T>
+void AVL<T>::rightRotation(Node<T>* &cNode,Node<T>* &prevCNode) {
+  Node<T>* temp=cNode->getLeftChild()->getRightChild();
+  if (root==cNode) {
+    root=cNode->getLeftChild();
+    root->setRightChild(cNode);
+    cNode->setLeftChild(temp);
+  }
+  else {
+    if (prevCNode->getLeftChild()==cNode) {
+      prevCNode->setLeftChild(cNode->getLeftChild());
+    }
+    else {  // is this even possible ???
+      prevCNode->setRightChild(cNode->getLeftChild());  
+    }
+    cNode->getLeftChild()->setRightChild(cNode);
+    cNode->setLeftChild(temp);
   }
 }
 

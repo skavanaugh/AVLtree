@@ -1,10 +1,10 @@
 CPP = g++
 CFLAGS = -Wall -Wextra -Werror
 
-all: ttest ntest
+all: atest ntest
 
-ttest: tree_test.cpp AVL.o Node.o
-	$(CPP) $(CFLAGS) -o ttest $^
+atest: avl_test.cpp AVL.o Node.o
+	$(CPP) $(CFLAGS) -o atest $^
 
 AVL.o: AVL.h AVL.cpp
 	$(CPP) $(CFLAGS) -c AVL.cpp
@@ -17,5 +17,5 @@ Node.o: Node.h Node.cpp
 
 clean:
 	rm -f *.o;
-	rm -f ntest; rm -f ttest;
+	rm -f ntest; rm -f atest;
 	rm -f *~;

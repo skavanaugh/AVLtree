@@ -3,18 +3,26 @@
 
 #include "Node.h"
 #include <string>
+#include <vector>
 #include <cassert>
+
+using std::vector;
 
 template <typename T>
 class AVL {
  private:
   Node<T>* root;
   
-  void traversalPrint(Node<T>* root);
   Node<T>* findNode(T val,Node<T>* curr,Node<T>* &parent,bool &isLC,bool &isRC);
   Node<T>* findIOP(Node<T>* curr, Node<T>* &parent);
   Node<T>* findIOS(Node<T>* curr, Node<T>* &parent);
+ 
+  void updateBalances(vector<Node<T>* > &nV, vector<short> &bV);
+  void leftRotation(Node<T>* &cNode, Node<T>* &pCNode); 
+  void rightRotation(Node<T>* &cNode, Node<T>* &pCNode); 
+
   void removeTree(Node<T>* curr);
+  void traversalPrint(Node<T>* root);
   void printTree();
   void printSpaces(int n);
   
