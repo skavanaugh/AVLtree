@@ -170,36 +170,80 @@ void AVL<T>::insert(T v) {
   if (critNode->getBalance()==2 || critNode->getBalance()==-2) {
     updateBalances(nodeVec,balVec);
   }
+  else
+    return; // if critNode has balance==(-1,0,1) no need to do rotations
 
-
-  // need to rotate anything?  
+  // if critNode has balance==+-2, we need to rotate
+  // find out what kind of rotation to do and do it 
 
   if (critNode->getBalance()==2 && critNode->getRightChild()->getBalance()!=-1) {    
     // simple left rotation
-    simpleLeftRotation(critNode,critPrev);
+    leftRotation(critNode,critPrev);
   }
    
   else if (critNode->getBalance()==-2 && critNode->getLeftChild()->getBalance()!=1) {
     // simple right rotation
-    simpleRightRotation(critNode,critPrev);
+    rightRotation(critNode,critPrev);
   }
 
   else if (critNode->getBalance()==2 && critNode->getRightChild()->getBalance()==-1) {
     // right then left rotation
-    simpleRightRotation(critNode->getRightChild(),critNode);
-    simpleLeftRotation(critNode,critPrev);
+    rightRotation(critNode->getRightChild(),critNode);
+    leftRotation(critNode,critPrev);
   }
 
   else if (critNode->getBalance()==-2 && critNode->getLeftChild()->getBalance()==1) {
     // left then right rotation
-    simpleLeftRotation(critNode->getLeftChild(),critNode);
-    simpleRightRotation(critNode,critPrev);
+    leftRotation(critNode->getLeftChild(),critNode);
+    rightRotation(critNode,critPrev);
   }
   
 }
 
 template <typename T>
-void AVL<T>::simpleLeftRotation(Node<T>* &cNode,Node<T>* &prevCNode) {
+void AVL<T>::updateBalances(vector<Node<T>* > &nV,vector<short> &bV) {
+
+  // three nodes in a row after rotation leads to 0 balances for all nodes
+  // (+-2,+-1) leads to (0,0)
+  if (bV.size()==2) {
+    nV[0]->setBalance(0);
+    nV[1]->setBalance(0);
+    return;
+  }
+
+  // one right or left rotation leads to 0 balance for crit node and child
+  // (2,1,bV[2]) or (-2,-1,bV[2]) leads to (0,0,bV[2]) (really same case as above)
+  else if (bV[0]==(2*bV[1])) {
+    nV[0]->setBalance(0);
+    nV[1]->setBalance(0);
+    return;
+  }
+  
+  // (2,-1,1) or (-2,1,-1) leads to (bV[1],0,0)
+  else if (bV[0]==(2*bV[2])) {
+    nV[0]->setBalance(bV[1]);
+    nV[1]->setBalance(0);
+    nV[2]->setBalance(0);
+    return;
+  }
+
+  // (2,-1,-1) or (-2,1,1) leads to (0,-bV[1],0)
+  else if (bV[0]==(-2*bV[2])) {
+    nV[0]->setBalance(0);
+    nV[1]->setBalance(-bV[1]);
+    nV[2]->setBalance(0);
+    return;
+  }
+ 
+  // shouldn't ever execute this code!
+  else {
+    cout << "did not update balances!" << endl;
+  }
+
+}
+
+template <typename T>
+void AVL<T>::leftRotation(Node<T>* &cNode,Node<T>* &prevCNode) {
   Node<T>* temp=cNode->getRightChild()->getLeftChild();
   if (root==cNode) {
     root=cNode->getRightChild();
@@ -216,9 +260,6 @@ void AVL<T>::simpleLeftRotation(Node<T>* &cNode,Node<T>* &prevCNode) {
     cNode->getRightChild()->setLeftChild(cNode);
     cNode->setRightChild(temp);
   }
-
-  // update balances ???
-
 }
 
 template <typename T>
