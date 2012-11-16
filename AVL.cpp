@@ -416,10 +416,12 @@ void AVL<T>::removeAVL(T v) {
   if (remLCNode==0 && remRCNode==0) {
     if (isLC) {
       parent->setLeftChild(0);
+      propagateBalances(0,nV,bV);
       delete remNode;
     }
     else if (isRC) {
       parent->setRightChild(0);
+      propagateBalances(0,nV,bV);
       delete remNode;
     }
     else {
@@ -430,10 +432,12 @@ void AVL<T>::removeAVL(T v) {
   else if (remLCNode==0 && remRCNode!=0) {
     if (isLC) {
       parent->setLeftChild(remRCNode);
+      propagateBalances(0,nV,bV);
       delete remNode;
     }
     else if (isRC) {
       parent->setRightChild(remRCNode);
+      propagateBalances(0,nV,bV);     
       delete remNode;
     }
     else {
@@ -445,14 +449,17 @@ void AVL<T>::removeAVL(T v) {
   else if (remLCNode!=0 && remRCNode==0) {
     if (isLC) {
       parent->setLeftChild(remLCNode);
+      propagateBalances(0,nV,bV);
       delete remNode;
     }
     else if (isRC) {
       parent->setRightChild(remRCNode);
+      propagateBalances(0,nV,bV);
       delete remNode;
     }
     else {
       root=remLCNode;
+      propagateBalances(0,nV,bV);
       delete remNode;
     }
   }
@@ -470,6 +477,7 @@ void AVL<T>::removeAVL(T v) {
 
     if (iop!=0) {
       iopVal=iop->getValue();
+      propagateBalances(0,nV,bV);
       remove(iop->getValue());
       remNode->setValue(iopVal);
     }  
@@ -479,11 +487,11 @@ void AVL<T>::removeAVL(T v) {
     cout << "value: " << nV[i]->getValue() << " , balance: " << nV[i]->getBalance() << endl;
   }
 
-  propagateBalances(0,nV,bV);
+  // propagateBalances(0,nV,bV);
 
-  for (unsigned i=0;i<nV.size();i++) {
-    cout << "value: " << nV[i]->getValue() << " , balance: " << nV[i]->getBalance() << endl;
-  }
+//  for (unsigned i=0;i<nV.size();i++) {
+//    cout << "value: " << nV[i]->getValue() << " , balance: " << nV[i]->getBalance() << endl;
+//  }
 
 }
 
