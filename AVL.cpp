@@ -315,9 +315,17 @@ void AVL<T>::updateBalances(vector<Node<T>* > &nV,vector<short> &bV) {
 
   // three nodes in a row after rotation leads to 0 balances for all nodes
   // (+-2,+-1) leads to (0,0)
-  if (bV.size()==2) {
+  if (bV.size()==2 && bV[1]!=0) {
     nV[0]->setBalance(0);
     nV[1]->setBalance(0);
+    return;
+  }
+   
+  // in the remove method, we encounter different balance sequences such as (2,0) and (-2,0)
+  // this sequence leads to (1,-1) or (-1,1) and does not propagate upward
+  else if (bV[1]==0) {
+    nV[0]->setBalance(bV[0]/2);
+    nV[1]->setBalance(-bV[0]/2);
     return;
   }
 
@@ -343,6 +351,13 @@ void AVL<T>::updateBalances(vector<Node<T>* > &nV,vector<short> &bV) {
     nV[1]->setBalance(-bV[1]);
     nV[2]->setBalance(0);
     return;
+  }
+
+  // (2,-1,0) or (-2,1,0) leads to (0,0,0)
+  // this is impossible for insert method but comes up in remove method
+  else if (bV[0]==-2*bV[1] && bV[2]==0) {
+    nV[0]->setBalance(0);
+    nV[1]->setBalance(0);
   }
  
   // shouldn't ever execute this code!
@@ -499,7 +514,7 @@ void AVL<T>::removeAVL(T v) {
       else
         prev=0;
  
-      findRotateVectors(rotNV,rotBV);
+      findRotateVectors(curr,rotNV,rotBV);
 
       if (rotBV[1]!=0)
         propagateBalances(0,nV,bV);
@@ -508,9 +523,9 @@ void AVL<T>::removeAVL(T v) {
         nV.pop_back();
       }  
 
-      updateBalancesRemove(rotNV,rotBV);
+      updateBalances(rotNV,rotBV);
       
-      rotateRemove(rotNV,rotBV,curr,prev);  
+      rotate(rotNV,rotBV,curr,prev);  
 
     }
     else {
@@ -544,9 +559,32 @@ void AVL<T>::propagateBalances(unsigned int start, vector<Node<T>* > &nV, vector
   bV.pop_back(); 
 } 
 
+template <typename T>
+void AVL<T>::findRotateVectors(Node<T>* curr, vector<Node<T>* > &nV, vector<short> &bV) {
+  
+  nV.push_back(curr);
+  bV.push_back(curr->getBalance());
+  
+  if (bV[0]==2)
+    nV.push_back(curr->getRightChild());
+  else
+    nV.push_back(curr->getLeftChild());
+  bV.push_back(nV[1]->getBalance());
+  
+  if (bV[1]==2*bV[0] || bV[1]==0)
+    return;
+  else {
+    if (bV[1]>0)
+      nV.push_back(nV[1]->getRightChild());
+    else
+      nV.push_back(nV[1]->getLeftChild());
+  }
+  bV.push_back(nV[2]->getBalance());
+
+}
 
 template <typename T>
-void AVL<T>::rotateRemove(vector<Node<T>* > &nodeVec, vector<short> &balVec,
+void AVL<T>::rotate(vector<Node<T>* > &nodeVec, vector<short> &balVec,
              Node<T>* &critNode, Node<T>* &critPrev) {
  
   Node<T>* child=0;

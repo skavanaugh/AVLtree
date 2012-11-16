@@ -24,6 +24,8 @@ class AVL {
 
   void propagateBalances(unsigned int start, vector<Node<T>* > &nV,vector<short> &bV); 
   void updateBalances(vector<Node<T>* > &nV, vector<short> &bV);
+  void findRotateVectors(Node<T>* curr, vector<Node<T>* > &nV, vector<short> &bV);
+  void rotate(vector<Node<T>* > &nV, vector<short> &bV, Node<T>* &curr, Node<T>* &prev);
   void leftRotation(Node<T>* &cNode, Node<T>* &pCNode); 
   void rightRotation(Node<T>* &cNode, Node<T>* &pCNode); 
 
