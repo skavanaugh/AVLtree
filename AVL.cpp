@@ -867,6 +867,9 @@ void AVL<T>::traversalPrint(Node<T>* root) {
 
 template <typename T>
 void AVL<T>::printTree() {
+  
+  if (root==0)
+    return;
 
   bool isEmptyLevel=false; 
   int numLevels=0;
