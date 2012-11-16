@@ -91,7 +91,8 @@ int main() {
   a2.print();
   a2.removeAVL(7);
   a2.print();
-
+  a2.removeAVL(4);
+  a2.print();
 
 /*
   avl->insert(10);

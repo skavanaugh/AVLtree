@@ -236,10 +236,10 @@ void AVL<T>::insert(T v) {
     }
   }
 
-  cout << "size: " << balVec.size() << endl;
-  for (unsigned int i=0;i<balVec.size();i++) {
-    cout << nodeVec[i]->getValue() << ", " << balVec[i] << endl;
-  }
+//  cout << "size: " << balVec.size() << endl;
+//  for (unsigned int i=0;i<balVec.size();i++) {
+//    cout << nodeVec[i]->getValue() << ", " << balVec[i] << endl;
+//  }
 
   // adjust balances of nodes to their post-rotation state prior to rotating them 
   // adjust the balances prior to rotation
@@ -250,10 +250,10 @@ void AVL<T>::insert(T v) {
   else
     return; // if critNode has balance==(-1,0,1) no need to do rotations
 
-  cout << "size: " << balVec.size() << endl;
-  for (unsigned int i=0;i<balVec.size();i++) {
-    cout << nodeVec[i]->getValue() << ", " << nodeVec[i]->getBalance() << endl;
-  }
+//  cout << "size: " << balVec.size() << endl;
+//  for (unsigned int i=0;i<balVec.size();i++) {
+//    cout << nodeVec[i]->getValue() << ", " << nodeVec[i]->getBalance() << endl;
+//  }
 
 
   // if critNode has balance==+-2, we need to rotate
@@ -459,7 +459,6 @@ void AVL<T>::removeAVL(T v) {
     }
     else {
       root=remLCNode;
-      propagateBalances(0,nV,bV);
       delete remNode;
     }
   }
@@ -468,12 +467,6 @@ void AVL<T>::removeAVL(T v) {
     Node<T>* iopParent=0;
     Node<T>* iop=findIOPAVL(remNode,iopParent,nV,bV);
     T iopVal;
-
-
-    for (unsigned i=0;i<nV.size();i++) {
-      cout << "value: " << nV[i]->getValue() << " , balance: " << nV[i]->getBalance() << endl;
-    }
-
 
     if (iop!=0) {
       iopVal=iop->getValue();
@@ -492,6 +485,39 @@ void AVL<T>::removeAVL(T v) {
 //  for (unsigned i=0;i<nV.size();i++) {
 //    cout << "value: " << nV[i]->getValue() << " , balance: " << nV[i]->getBalance() << endl;
 //  }
+
+  // go through balance vector toward root and find balances of +-2
+  Node<T>* curr=0;
+  Node<T>* prev=0;
+  vector<Node<T>* > rotNV;
+  vector<short> rotBV;
+  while (bV.size()>0) {
+    if (bV[bV.size()-1]>1 || bV[bV.size()-1]<-1) {
+      curr=nV[nV.size()-1];
+      if (nV.size()>1)
+        prev=nV[nV.size()-2];
+      else
+        prev=0;
+ 
+      findRotateVectors(rotNV,rotBV);
+
+      if (rotBV[1]!=0)
+        propagateBalances(0,nV,bV);
+      else {
+        bV.pop_back();
+        nV.pop_back();
+      }  
+
+      updateBalancesRemove(rotNV,rotBV);
+      
+      rotateRemove(rotNV,rotBV,curr,prev);  
+
+    }
+    else {
+      bV.pop_back();
+      nV.pop_back();
+    }
+  }  
 
 }
 
@@ -513,9 +539,43 @@ void AVL<T>::propagateBalances(unsigned int start, vector<Node<T>* > &nV, vector
       if (bV[depth-i-1]<=-1)
         break;
     }
-  } 
+  }
+  nV.pop_back();
+  bV.pop_back(); 
 } 
 
+
+template <typename T>
+void AVL<T>::rotateRemove(vector<Node<T>* > &nodeVec, vector<short> &balVec,
+             Node<T>* &critNode, Node<T>* &critPrev) {
+ 
+  Node<T>* child=0;
+  
+  if (balVec[0]==2 && balVec[1]!=-1) {    
+    // simple left rotation
+    leftRotation(critNode,critPrev);
+  }
+   
+  else if (balVec[0]==-2 && balVec[1]!=1) {
+    // simple right rotation
+    rightRotation(critNode,critPrev);
+  }
+
+  else if (balVec[0]==2 && balVec[1]==-1) {
+    // right then left rotation
+    child=critNode->getRightChild();
+    rightRotation(child,critNode);
+    leftRotation(critNode,critPrev);
+  }
+
+  else if (balVec[0]==-2 && balVec[1]==1) {
+    // left then right rotation
+    child=critNode->getLeftChild();
+    leftRotation(child,critNode);
+    rightRotation(critNode,critPrev);
+  }
+
+}
 
 
 template <typename T>
