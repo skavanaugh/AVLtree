@@ -13,10 +13,16 @@ class AVL {
  private:
   Node<T>* root;
   
+  Node<T>* findNodeAVL(T val,Node<T>* curr,Node<T>* &parent,bool &isLC,bool &isRC,
+           vector<Node<T>* > &nV,vector<short> &bV);
+  Node<T>* findIOPAVL(Node<T>* curr, Node<T>* &parent, vector<Node<T>* > &nV,vector<short> &bV);
+  Node<T>* findIOSAVL(Node<T>* curr, Node<T>* &parent, vector<Node<T>* > &nV,vector<short> &bV);
+  
   Node<T>* findNode(T val,Node<T>* curr,Node<T>* &parent,bool &isLC,bool &isRC);
   Node<T>* findIOP(Node<T>* curr, Node<T>* &parent);
   Node<T>* findIOS(Node<T>* curr, Node<T>* &parent);
- 
+
+  void propagateBalances(unsigned int start, vector<Node<T>* > &nV,vector<short> &bV); 
   void updateBalances(vector<Node<T>* > &nV, vector<short> &bV);
   void leftRotation(Node<T>* &cNode, Node<T>* &pCNode); 
   void rightRotation(Node<T>* &cNode, Node<T>* &pCNode); 
@@ -31,6 +37,7 @@ class AVL {
   ~AVL<T>();
 
   bool find(T v);
+  void removeAVL(T v);
   void remove(T v);
   void removeMutable(T v);
   void removeStd(T v);

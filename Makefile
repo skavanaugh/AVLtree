@@ -1,5 +1,6 @@
 CPP = g++
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra
+# -Werror
 
 all: atest ntest
 

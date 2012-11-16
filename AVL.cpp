@@ -7,6 +7,78 @@ using std::cout;
 using std::endl;
 using std::vector;
 
+
+template <typename T>
+Node<T>* AVL<T>::findNodeAVL(T val, Node<T>* curr, Node<T>* &parent,bool &isLC, bool &isRC,
+                 vector<Node<T>* > &nV, vector<short> &bV) {
+  if (curr==0)
+    return 0;
+  else if (curr->getValue()==val) {
+    nV.push_back(curr);
+    bV.push_back(curr->getBalance());
+    return curr;
+  }
+  else if (curr->getValue()>val) {
+    nV.push_back(curr);
+    bV.push_back(curr->getBalance());
+    isLC=true;
+    isRC=false;
+    parent=curr;
+    return findNodeAVL(val,curr->getLeftChild(),parent,isLC,isRC,nV,bV);
+  }
+  else {
+    nV.push_back(curr);
+    bV.push_back(curr->getBalance());
+    isLC=false;
+    isRC=true;
+    parent=curr;
+    return findNodeAVL(val,curr->getRightChild(),parent,isLC,isRC,nV,bV);
+  }
+}
+
+template <typename T>
+Node<T>* AVL<T>::findIOPAVL(Node<T>* curr, Node<T>* &parent, vector<Node<T>* > &nV, vector<short> &bV) {
+  if (curr==0) 
+    return 0;   
+  else if (curr->getLeftChild()==0)
+    return 0;
+  else {
+    parent=curr;
+    curr=curr->getLeftChild();
+    nV.push_back(curr);
+    bV.push_back(curr->getBalance());
+  }
+    
+  while (curr->getRightChild()!=0) {
+    parent=curr;
+    curr=curr->getRightChild();
+    nV.push_back(curr);
+    bV.push_back(curr->getBalance());
+  }
+  
+  return curr;
+}
+
+template <typename T>
+Node<T>* AVL<T>::findIOSAVL(Node<T>* curr, Node<T>* &parent, vector<Node<T>* > &nV, 
+                 vector<short> &bV) {
+  if (curr==0) 
+    return 0;   
+  else if (curr->getRightChild()==0)
+    return 0;
+  else {
+    parent=curr;
+    curr=curr->getRightChild();
+  }
+
+  while (curr->getLeftChild()!=0) {
+    parent=curr;
+    curr=curr->getLeftChild();
+  }
+
+  return curr;
+}
+
 template <typename T>
 Node<T>* AVL<T>::findNode(T val,Node<T>* curr,Node<T>* &parent,bool &isLC, bool &isRC) {
   if (curr==0)
@@ -292,7 +364,7 @@ void AVL<T>::leftRotation(Node<T>* &cNode,Node<T>* &prevCNode) {
     if (prevCNode->getRightChild()==cNode) {
       prevCNode->setRightChild(cNode->getRightChild());
     }
-    else {  // is this even possible ???
+    else { 
       prevCNode->setLeftChild(cNode->getRightChild());  
     }
     cNode->getRightChild()->setLeftChild(cNode);
@@ -312,13 +384,131 @@ void AVL<T>::rightRotation(Node<T>* &cNode,Node<T>* &prevCNode) {
     if (prevCNode->getLeftChild()==cNode) {
       prevCNode->setLeftChild(cNode->getLeftChild());
     }
-    else {  // is this even possible ???
+    else { 
       prevCNode->setRightChild(cNode->getLeftChild());  
     }
     cNode->getLeftChild()->setRightChild(cNode);
     cNode->setLeftChild(temp);
   }
 }
+
+template <typename T>
+void AVL<T>::removeAVL(T v) {
+
+  bool isLC=false;  // remNode is LC of parent?
+  bool isRC=false;  // remNode is RC of parent?
+  Node<T>* parent=0;
+  vector<Node<T>* > nV;
+  vector<short> bV;
+  Node<T>* remNode=findNodeAVL(v,root,parent,isLC,isRC,nV,bV); // node to be removed
+
+
+  for (unsigned i=0;i<nV.size();i++) {
+    cout << "value: " << nV[i]->getValue() << " , balance: " << nV[i]->getBalance() << endl;
+  }
+  
+  if (remNode==0) // remNode not in tree
+    return;
+
+  Node<T>* remLCNode=remNode->getLeftChild();  // LC of node to be removed
+  Node<T>* remRCNode=remNode->getRightChild(); // RC of node to be removed
+
+  if (remLCNode==0 && remRCNode==0) {
+    if (isLC) {
+      parent->setLeftChild(0);
+      delete remNode;
+    }
+    else if (isRC) {
+      parent->setRightChild(0);
+      delete remNode;
+    }
+    else {
+      root=0;
+      delete remNode;
+    }
+  }
+  else if (remLCNode==0 && remRCNode!=0) {
+    if (isLC) {
+      parent->setLeftChild(remRCNode);
+      delete remNode;
+    }
+    else if (isRC) {
+      parent->setRightChild(remRCNode);
+      delete remNode;
+    }
+    else {
+      root=remRCNode;
+      delete remNode;
+    }
+
+  }
+  else if (remLCNode!=0 && remRCNode==0) {
+    if (isLC) {
+      parent->setLeftChild(remLCNode);
+      delete remNode;
+    }
+    else if (isRC) {
+      parent->setRightChild(remRCNode);
+      delete remNode;
+    }
+    else {
+      root=remLCNode;
+      delete remNode;
+    }
+  }
+
+  else {  // remNode has two children (need to use IOS or IOP)
+    Node<T>* iopParent=0;
+    Node<T>* iop=findIOPAVL(remNode,iopParent,nV,bV);
+    T iopVal;
+
+
+    for (unsigned i=0;i<nV.size();i++) {
+      cout << "value: " << nV[i]->getValue() << " , balance: " << nV[i]->getBalance() << endl;
+    }
+
+
+    if (iop!=0) {
+      iopVal=iop->getValue();
+      remove(iop->getValue());
+      remNode->setValue(iopVal);
+    }  
+  }
+
+  for (unsigned i=0;i<nV.size();i++) {
+    cout << "value: " << nV[i]->getValue() << " , balance: " << nV[i]->getBalance() << endl;
+  }
+
+  propagateBalances(0,nV,bV);
+
+  for (unsigned i=0;i<nV.size();i++) {
+    cout << "value: " << nV[i]->getValue() << " , balance: " << nV[i]->getBalance() << endl;
+  }
+
+}
+
+template <typename T>
+void AVL<T>::propagateBalances(unsigned int start, vector<Node<T>* > &nV, vector<short> &bV) {
+  
+  unsigned int depth=nV.size()-1-start;
+  
+  for (unsigned int i=0;i<depth;i++) {
+    if (nV[depth-i-1]->getValue()>nV[depth-i]->getValue()) {
+      bV[depth-i-1]=(nV[depth-i-1]->getBalance())+1;
+      nV[depth-i-1]->setBalance(bV[depth-i-1]);
+      if (bV[depth-i-1]>=1)
+        break;
+    }
+    else {
+      bV[depth-i-1]=(nV[depth-i-1]->getBalance())-1;  
+      nV[depth-i-1]->setBalance(bV[depth-i-1]);
+      if (bV[depth-i-1]<=-1)
+        break;
+    }
+  } 
+} 
+
+
 
 template <typename T>
 void AVL<T>::remove(T v) {

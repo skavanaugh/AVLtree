@@ -58,10 +58,40 @@ int main() {
   d->print();
   d->insert(3.25);
   d->print();
-  
-
 
   delete d;
+
+  AVL<int>* a1 = new AVL<int>();
+  a1->insert(10);
+  a1->insert(20);
+  a1->insert(30);
+  a1->insert(40);
+  a1->print();
+  a1->insert(35);
+  a1->print();
+  delete a1;
+
+  AVL<int> a2;
+  a2.insert(3);
+  a2.insert(2);
+  a2.insert(1);
+  a2.insert(4);
+  a2.print();
+  a2.insert(5);
+  a2.print();
+  a2.insert(6);
+  a2.print();
+  a2.insert(7);
+  a2.print();
+  a2.insert(16);
+  a2.print();
+  a2.insert(15);
+  a2.print();
+  a2.insert(14);
+  a2.print();
+  a2.removeAVL(7);
+  a2.print();
+
 
 /*
   avl->insert(10);
