@@ -30,6 +30,7 @@ class AVL {
   void rightRotation(Node<T>* &cNode, Node<T>* &pCNode); 
 
   void removeTree(Node<T>* curr);
+  void remove01(T v);
   void inOrderTraversal(Node<T>* root);
   void postOrderTraversal(Node<T>* root);
   void printTree();
@@ -40,10 +41,7 @@ class AVL {
   ~AVL<T>();
 
   bool find(T v);
-  void removeAVL(T v);
   void remove(T v);
-  void removeMutable(T v);
-  void removeStd(T v);
   void insert(T v);
   void print();
   void inOrderTraversal();
