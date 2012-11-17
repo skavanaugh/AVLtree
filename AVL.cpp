@@ -305,7 +305,6 @@ void AVL<T>::updateBalances(vector<Node<T>* > &nV,vector<short> &bV) {
   }
 
   // (2,-1,0) or (-2,1,0) leads to (0,0,0)
-  // this is impossible for insert method but comes up in remove method
   else if (bV[0]==-2*bV[1] && bV[2]==0) {
     nV[0]->setBalance(0);
     nV[1]->setBalance(0);
