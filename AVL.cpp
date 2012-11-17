@@ -151,6 +151,11 @@ void AVL<T>::removeTree(Node<T>* curr) {
 }
 
 template <typename T>
+void AVL<T>::removeTree() {
+  removeTree(root);
+}
+
+template <typename T>
 AVL<T>::AVL() {
   root = 0;
 }
@@ -410,7 +415,7 @@ void AVL<T>::remove(T v) {
       delete remNode;
     }
     else if (isRC) {
-      parent->setRightChild(remRCNode);
+      parent->setRightChild(remLCNode);
       propagateBalances(nV,bV);
       delete remNode;
     }
@@ -600,7 +605,7 @@ void AVL<T>::remove01(T v) {
       delete remNode;
     }
     else if (isRC) {
-      parent->setRightChild(remRCNode);
+      parent->setRightChild(remLCNode);
       delete remNode;
     }
     else {
@@ -724,21 +729,22 @@ void AVL<T>::printTree() {
     }
     cout << endl << endl;
   }
-  cout << endl << endl;
 
 // the following code prints the vectors left justified (without formatting)
 // i may use this code another time
-/*
+// i uncommented this code and added balances to give provide some more information
+
+  cout << endl;
   for (unsigned int i=0;i<levelVector.size();i++) {
     for (unsigned int j=0;j<levelVector[i].size();j++) {
       if (levelVector[i][j]!=0)
-        cout << levelVector[i][j]->getValue() << " ";
+        cout << "[" << levelVector[i][j]->getValue() << "," << levelVector[i][j]->getBalance() << "] ";
       else
-        cout << "X ";
+        cout << "[X,X] ";
     }
     cout << endl;
   }
-*/
+  cout << endl << endl;
 }
 
 template <typename T>

@@ -42,6 +42,7 @@ class AVL {
 
   bool find(T v);
   void remove(T v);
+  void removeTree();
   void insert(T v);
   void print();
   void inOrderTraversal();

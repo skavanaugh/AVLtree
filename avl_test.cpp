@@ -1,11 +1,84 @@
 #include "AVL.h"
 #include <iostream>
+#include <cstdlib>
+#include <vector>
+#include <algorithm>
 
 using std::cout;
 using std::endl;
+using std::vector;
 
 int main() {
+   
+  int SIZE=20;
+  vector<int> v(SIZE);  
+  AVL<int>* avl = new AVL<int>();
+  srand(time(0));  
 
+  for (int i=0;i<SIZE;i++) {
+    v[i] = 5*i;
+  }
+  random_shuffle(v.begin(),v.end());
+
+  cout << "Multiples of 5 from 0 to 95 have been shuffled." << endl;
+  cout << "They will be inserted into an AVL tree in the following order:" << endl << endl;  
+  for (int i=0;i<SIZE;i++) {
+    cout << v[i] << endl;
+  }
+  cout << endl;
+
+  for (int i=0;i<SIZE;i++) {
+    avl->insert(v[i]);
+    cout << "After Inserting " << v[i] << endl << endl;
+    avl->print();
+  }
+  cout << "In Order Traversal: " << endl;
+  avl->inOrderTraversal();
+  cout << endl << "Post Order Traversal: " << endl;
+  avl->postOrderTraversal();
+  cout << endl;
+  
+  cout << "Now the shuffled numbers will be removed from the AVL tree ";
+  cout << "in the order they were inserted." << endl << endl;
+  for (int i=0;i<SIZE;i++) {
+    avl->remove(v[i]);
+    cout << "After Removing " << v[i] << endl << endl;
+    avl->print();
+  }
+  
+  avl->removeTree(); 
+  srand(time(0)); 
+
+  cout << "Now 20 random numbers between 0 and 99 will be inserted into an AVL tree in this order.";
+  cout << endl;
+  for (int i=0;i<SIZE;i++) {
+    v[i] = rand() % 100;
+    cout << v[i] << endl;
+  }
+  cout << endl;
+  
+  for (int i=0;i<SIZE;i++) {
+    avl->insert(v[i]);
+    cout << "After Inserting " << v[i] << endl << endl;
+    avl->print();
+  }
+
+  cout << "In Order Traversal: " << endl;
+  avl->inOrderTraversal();
+  cout << endl << "Post Order Traversal: " << endl;
+  avl->postOrderTraversal();
+  cout << endl;
+  
+  for (int i=0;i<SIZE;i++) {
+    avl->remove(v[i]);
+    cout << "After Removing " << v[i] << endl << endl;
+    avl->print();
+  }
+
+  delete avl;
+
+
+/*
   AVL<int>* avl = new AVL<int>();
   avl->insert(1);
   avl->insert(2);
@@ -25,29 +98,54 @@ int main() {
   avl->print();  
   avl->insert(10);
   avl->print();
+  avl->inOrderTraversal();
+  avl->postOrderTraversal();
+
+  
+  avl->remove(1);
+  avl->print();  
+  avl->remove(2);
+  avl->print();  
+  avl->remove(3);
+  avl->print();  
+  avl->remove(4);
+  avl->print();
+  avl->remove(5);
+  avl->print();  
+  avl->remove(6);
+  avl->print();  
+  avl->remove(7);
+  avl->print();  
+  avl->remove(8);
+  avl->print();
+  avl->remove(9);
+  avl->print();
+  avl->remove(10);
+  avl->print();  
+
+  avl->insert(5);
+  avl->print();
+  avl->insert(18);
+  avl->print();
+  avl->insert(25);
+  avl->insert(2);
+  avl->insert(1);
+  avl->print();
+  avl->remove(18);
+  avl->print();
   delete avl;
 
   AVL<int>* a = new AVL<int>();
-  a->insert(10);
-  a->insert(5);
+  a->insert(400);
   a->print();
-  a->insert(15);
-  a->insert(12);
-  a->insert(17);
-  a->insert(3);
-  a->insert(7);
-  a->insert(1);
-  a->insert(4);
-  a->insert(6);
-  a->insert(8);
+  a->remove(5);
   a->print();
-  a->insert(9);
+  a->remove(400);
   a->print();
-
-  // a->print();
-
   delete a;
-  
+*/
+
+/*
   AVL<double>* d = new AVL<double>();
   d->insert(1);
   d->insert(2);
@@ -89,46 +187,12 @@ int main() {
   a2.print();
   a2.insert(14);
   a2.print();
-  a2.removeAVL(7);
+  a2.remove(7);
   a2.print();
-  a2.removeAVL(4);
+  a2.remove(4);
   a2.print();
-
+*/
 /*
-  avl->insert(10);
-  avl->insert(5);
-  avl->insert(15);
-  avl->insert(20);
-  avl->insert(16);
-  avl->insert(17);
-  avl->insert(23);
-  // avl->insert(18);
-  avl->insert(24);
-  avl->insert(15);
-  avl->insert(21);
-
-  avl->print();
-  
-  cout<<endl;
-  cout<<avl->find(10)<<endl;
-  cout<<avl->find(17)<<endl;
-  cout<<avl->find(18)<<endl;
-  cout<<avl->find(1)<<endl;
-  cout<<endl;
-
-  avl->removeMutable(20);
-  avl->print();
-  cout<<endl;
-
-  avl->removeMutable(23);
-  avl->print();
-  cout<<endl;
- 
-  avl->removeMutable(10);
-  avl->print();
-
-  delete avl;
-
   AVL<double>* db=new AVL<double>();
   db->insert(7.5);
   db->insert(12.98);
@@ -136,9 +200,9 @@ int main() {
   db->insert(-2.58);
   db->insert(99.1);
   db->print();
-  db->removeStd(12.98);
-  db->removeStd(7.5);
-  db->removeStd(5.34353);
+  db->remove(12.98);
+  db->remove(7.5);
+  db->remove(5.34353);
   db->print();
   delete db;
 
