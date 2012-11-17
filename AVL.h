@@ -22,15 +22,16 @@ class AVL {
   Node<T>* findIOP(Node<T>* curr, Node<T>* &parent);
   Node<T>* findIOS(Node<T>* curr, Node<T>* &parent);
 
-  void propagateBalances(unsigned int start, vector<Node<T>* > &nV,vector<short> &bV); 
+  void propagateBalances(vector<Node<T>* > &nV,vector<short> &bV); 
   void updateBalances(vector<Node<T>* > &nV, vector<short> &bV);
   void findRotateVectors(Node<T>* curr, vector<Node<T>* > &nV, vector<short> &bV);
-  void rotate(vector<Node<T>* > &nV, vector<short> &bV, Node<T>* &curr, Node<T>* &prev);
+  void rotate(vector<short> &bV, Node<T>* &curr, Node<T>* &prev);
   void leftRotation(Node<T>* &cNode, Node<T>* &pCNode); 
   void rightRotation(Node<T>* &cNode, Node<T>* &pCNode); 
 
   void removeTree(Node<T>* curr);
-  void traversalPrint(Node<T>* root);
+  void inOrderTraversal(Node<T>* root);
+  void postOrderTraversal(Node<T>* root);
   void printTree();
   void printSpaces(int n);
   
@@ -45,6 +46,8 @@ class AVL {
   void removeStd(T v);
   void insert(T v);
   void print();
+  void inOrderTraversal();
+  void postOrderTraversal();
 };
 
 

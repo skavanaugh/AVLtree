@@ -69,11 +69,15 @@ Node<T>* AVL<T>::findIOSAVL(Node<T>* curr, Node<T>* &parent, vector<Node<T>* > &
   else {
     parent=curr;
     curr=curr->getRightChild();
+    nV.push_back(curr);
+    bV.push_back(curr->getBalance());
   }
 
   while (curr->getLeftChild()!=0) {
     parent=curr;
     curr=curr->getLeftChild();
+    nV.push_back(curr);
+    bV.push_back(curr->getBalance());
   }
 
   return curr;
@@ -362,7 +366,6 @@ void AVL<T>::updateBalances(vector<Node<T>* > &nV,vector<short> &bV) {
  
   // shouldn't ever execute this code!
   else {
-    cout << "did not update balances!" << endl;
   }
 
 }
@@ -431,32 +434,34 @@ void AVL<T>::removeAVL(T v) {
   if (remLCNode==0 && remRCNode==0) {
     if (isLC) {
       parent->setLeftChild(0);
-      propagateBalances(0,nV,bV);
+      propagateBalances(nV,bV);
       delete remNode;
     }
     else if (isRC) {
       parent->setRightChild(0);
-      propagateBalances(0,nV,bV);
+      propagateBalances(nV,bV);
       delete remNode;
     }
     else {
       root=0;
+      propagateBalances(nV,bV);
       delete remNode;
     }
   }
   else if (remLCNode==0 && remRCNode!=0) {
     if (isLC) {
       parent->setLeftChild(remRCNode);
-      propagateBalances(0,nV,bV);
+      propagateBalances(nV,bV);
       delete remNode;
     }
     else if (isRC) {
       parent->setRightChild(remRCNode);
-      propagateBalances(0,nV,bV);     
+      propagateBalances(nV,bV);     
       delete remNode;
     }
     else {
       root=remRCNode;
+      propagateBalances(nV,bV);
       delete remNode;
     }
 
@@ -464,16 +469,17 @@ void AVL<T>::removeAVL(T v) {
   else if (remLCNode!=0 && remRCNode==0) {
     if (isLC) {
       parent->setLeftChild(remLCNode);
-      propagateBalances(0,nV,bV);
+      propagateBalances(nV,bV);
       delete remNode;
     }
     else if (isRC) {
       parent->setRightChild(remRCNode);
-      propagateBalances(0,nV,bV);
+      propagateBalances(nV,bV);
       delete remNode;
     }
     else {
       root=remLCNode;
+      propagateBalances(nV,bV);
       delete remNode;
     }
   }
@@ -485,7 +491,7 @@ void AVL<T>::removeAVL(T v) {
 
     if (iop!=0) {
       iopVal=iop->getValue();
-      propagateBalances(0,nV,bV);
+      propagateBalances(nV,bV);
       remove(iop->getValue());
       remNode->setValue(iopVal);
     }  
@@ -517,7 +523,7 @@ void AVL<T>::removeAVL(T v) {
       findRotateVectors(curr,rotNV,rotBV);
 
       if (rotBV[1]!=0)
-        propagateBalances(0,nV,bV);
+        propagateBalances(nV,bV);
       else {
         bV.pop_back();
         nV.pop_back();
@@ -525,7 +531,7 @@ void AVL<T>::removeAVL(T v) {
 
       updateBalances(rotNV,rotBV);
       
-      rotate(rotNV,rotBV,curr,prev);  
+      rotate(rotBV,curr,prev);  
 
     }
     else {
@@ -537,9 +543,9 @@ void AVL<T>::removeAVL(T v) {
 }
 
 template <typename T>
-void AVL<T>::propagateBalances(unsigned int start, vector<Node<T>* > &nV, vector<short> &bV) {
+void AVL<T>::propagateBalances(vector<Node<T>* > &nV, vector<short> &bV) {
   
-  unsigned int depth=nV.size()-1-start;
+  unsigned int depth=nV.size()-1;
   
   for (unsigned int i=0;i<depth;i++) {
     if (nV[depth-i-1]->getValue()>nV[depth-i]->getValue()) {
@@ -584,7 +590,7 @@ void AVL<T>::findRotateVectors(Node<T>* curr, vector<Node<T>* > &nV, vector<shor
 }
 
 template <typename T>
-void AVL<T>::rotate(vector<Node<T>* > &nodeVec, vector<short> &balVec,
+void AVL<T>::rotate(vector<short> &balVec,
              Node<T>* &critNode, Node<T>* &critPrev) {
  
   Node<T>* child=0;
@@ -857,12 +863,32 @@ void AVL<T>::print() {
 }
 
 template <typename T>
-void AVL<T>::traversalPrint(Node<T>* root) {
+void AVL<T>::inOrderTraversal(Node<T>* root) {
   if(root != 0) {
-    traversalPrint(root->getLeftChild());
+    inOrderTraversal(root->getLeftChild());
     std::cout << root->getValue() << std::endl;
-    traversalPrint(root->getRightChild());
+    inOrderTraversal(root->getRightChild());
   }
+}
+
+template <typename T>
+void AVL<T>::inOrderTraversal() {
+  inOrderTraversal(root);
+}
+
+
+template <typename T>
+void AVL<T>::postOrderTraversal(Node<T>* root) {
+  if(root != 0) {
+    postOrderTraversal(root->getLeftChild());
+    postOrderTraversal(root->getRightChild());
+    std::cout << root->getValue() << std::endl;
+  }
+}
+
+template <typename T>
+void AVL<T>::postOrderTraversal() {
+  postOrderTraversal(root);
 }
 
 template <typename T>
