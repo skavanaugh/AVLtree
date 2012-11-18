@@ -75,6 +75,62 @@ int main() {
     avl->print();
   }
 
+  avl->removeTree();
+
+  cout << "Now the numbers from 1 to 20 will be inserted into an AVL tree in order." << endl;
+  cout << "They will be removed in the same order." << endl;
+  for (int i=0;i<SIZE;i++) {
+    v[i] = i+1;
+    cout << v[i] << endl;
+  }
+  cout << endl;
+
+  for (int i=0;i<SIZE;i++) {
+    avl->insert(v[i]);
+    cout << "After Inserting " << v[i] << endl << endl;
+    avl->print();
+  }
+
+  cout << "In Order Traversal: " << endl;
+  avl->inOrderTraversal();
+  cout << endl << "Post Order Traversal: " << endl;
+  avl->postOrderTraversal();
+  cout << endl;
+  
+  for (int i=0;i<SIZE;i++) {
+    avl->remove(v[i]);
+    cout << "After Removing " << v[i] << endl << endl;
+    avl->print();
+  }
+
+  avl->removeTree();
+
+  cout << "Now the numbers from 1 to 20 will be inserted into an AVL tree in order." << endl;
+  cout << "They will be removed in REVERSE order." << endl;
+  for (int i=0;i<SIZE;i++) {
+    v[i] = i+1;
+    cout << v[i] << endl;
+  }
+  cout << endl;
+
+  for (int i=0;i<SIZE;i++) {
+    avl->insert(v[i]);
+    cout << "After Inserting " << v[i] << endl << endl;
+    avl->print();
+  }
+
+  cout << "In Order Traversal: " << endl;
+  avl->inOrderTraversal();
+  cout << endl << "Post Order Traversal: " << endl;
+  avl->postOrderTraversal();
+  cout << endl;
+  
+  for (int i=0;i<SIZE;i++) {
+    avl->remove(v[SIZE-1-i]);
+    cout << "After Removing " << v[SIZE-1-i] << endl << endl;
+    avl->print();
+  }
+
   delete avl;
 
 

@@ -454,6 +454,8 @@ void AVL<T>::remove(T v) {
       else
         prev=0;
  
+      rotNV.clear();
+      rotBV.clear(); 
       findRotateVectors(curr,rotNV,rotBV);
 
       if (rotBV[1]!=0)
